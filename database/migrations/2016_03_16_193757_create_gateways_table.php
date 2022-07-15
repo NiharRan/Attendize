@@ -37,6 +37,7 @@ class CreateGatewaysTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('payment_gateway_id');
             $table->text('config');
+            $table->boolean('is_active')->default(0);
             $table->softDeletes();
             $table->nullableTimestamps();
 

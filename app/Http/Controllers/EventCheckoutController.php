@@ -187,7 +187,7 @@ class EventCheckoutController extends Controller
         }
 
 //        $activeAccountPaymentGateway = $event->account->getGateway($event->account->payment_gateway_id);
-        $activeSystemPaymentGateway = System::first();
+        $activeSystemPaymentGateway = System::where('is_active', 1)->first();
         //if no payment gateway configured and no offline pay, don't go to the next step and show user error
         if (empty($activeSystemPaymentGateway) && !$event->enable_offline_payments) {
             return response()->json([

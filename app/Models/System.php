@@ -44,4 +44,22 @@ class System extends MyBaseModel
     {
         return $this->belongsTo(\App\Models\PaymentGateway::class, 'payment_gateway_id', 'id');
     }
+
+
+    /**
+     * Get a config value for a gateway
+     *
+     * @param $gateway_id
+     * @param $key
+     * @return mixed
+     */
+    public function getGatewayConfigVal($payment_id, $key)
+    {
+        $config = unserialize($this->config);
+        if(is_array($config) && $this->payment_gateway_id == $payment_id) {
+            return $config[$key] ?? false;
+        }
+
+        return false;
+    }
 }

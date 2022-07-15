@@ -4,13 +4,13 @@
         <div class="col-md-6">
             <div class="form-group">
                 {!! Form::label('stripe[apiKey]', trans("ManageAccount.stripe_secret_key"), array('class'=>'control-label ')) !!}
-                {!! Form::text('stripe[apiKey]', $account->getGatewayConfigVal($payment_gateway['id'], 'apiKey'),[ 'class'=>'form-control'])  !!}
+                {!! Form::text('stripe[apiKey]', $system->getGatewayConfigVal($payment_gateway['id'], 'apiKey'),[ 'class'=>'form-control'])  !!}
             </div>
         </div>
         <div class="col-md-6">
             <div class="form-group">
                 {!! Form::label('publishableKey', trans("ManageAccount.stripe_publishable_key"), array('class'=>'control-label ')) !!}
-                {!! Form::text('stripe[publishableKey]', $account->getGatewayConfigVal($payment_gateway['id'], 'publishableKey'),[ 'class'=>'form-control'])  !!}
+                {!! Form::text('stripe[publishableKey]', $system->getGatewayConfigVal($payment_gateway['id'], 'publishableKey'),[ 'class'=>'form-control'])  !!}
             </div>
         </div>
     </div>

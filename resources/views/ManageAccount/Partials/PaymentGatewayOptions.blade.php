@@ -1,9 +1,16 @@
 @if(Gate::allows('change-payment-gateway'))
+    @php
+        $current_payment_gateway_id = $default_payment_gateway_id;
+        foreach ($payment_gateways as $id => $payment_gateway) {
+            if ($payment_gateway['id'] == $system->payment_gateway_id) {
+                $current_payment_gateway_id = $payment_gateway['id'];
+            }
+        }
+    @endphp
 <script>
     $(function () {
-
         $('.payment_gateway_options').hide();
-        $('#gateway_{{ $default_payment_gateway_id }}').show();
+        $('#gateway_{{ $current_payment_gateway_id }}').show();
 
         $('input[type=radio][name=payment_gateway]').on('change', function (e) {
             $('.payment_gateway_options').hide();
@@ -20,8 +27,11 @@
     ')) !!}<br/>
 
     @foreach ($payment_gateways as $id => $payment_gateway)
+        @php
+        $checked = $payment_gateway['id'] == $system->payment_gateway_id ? true : false;
+        @endphp
     {!! Form::radio('payment_gateway', $payment_gateway['id'], $payment_gateway['default'],
-    array('id'=>'payment_gateway_' . $payment_gateway['id'])) !!}
+    array('id'=>'payment_gateway_' . $payment_gateway['id'], 'checked' => $checked)) !!}
     {!! Form::label($payment_gateway['provider_name'],$payment_gateway['provider_name'] , array('class'=>'control-label
     gateway_selector')) !!}<br/>
     @endforeach

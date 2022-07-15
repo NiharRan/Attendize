@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Services\PaymentGateway\Dummy;
+use Services\PaymentGateway\Mollie;
 use Services\PaymentGateway\Stripe;
 use Services\PaymentGateway\StripeSCA;
 use Utils;
@@ -38,6 +39,7 @@ class ManageAccountController extends MyBaseController
     {
         $data = [
             'account'                    => Account::find(Auth::user()->account_id),
+            'system'                     => System::where('is_active', 1)->first(),
             'timezones'                  => Timezone::pluck('location', 'id'),
             'currencies'                 => Currency::pluck('title', 'id'),
             'payment_gateways'           => PaymentGateway::getAllWithDefaultSet(),
@@ -185,6 +187,9 @@ class ManageAccountController extends MyBaseController
             case StripeSCA::GATEWAY_NAME :
                 $config = $request->get('stripe_sca');
                 break;
+            case Mollie::GATEWAY_NAME :
+                $config = $request->get('mollie');
+                break;
             case Dummy::GATEWAY_NAME :
                 break;
 
@@ -195,18 +200,19 @@ class ManageAccountController extends MyBaseController
         $payment_gateway->default = 1;
         $payment_gateway->save();
 
-        $system = System::first();
-
-        if (!$system) {
-            $system = System::create([
-                'config' => serialize($config),
-                'payment_gateway_id' => $gateway_id
+        $system = System::firstOrNew(
+            [
+                'payment_gateway_id' => $gateway_id,
             ]);
-        } else {
-            $system->config = serialize($config);
-            $system->payment_gateway_id = $gateway_id;
-            $system->save();
-        }
+        $system->config = serialize($config);
+        $system->payment_gateway_id = $gateway_id;
+        $system->is_active = 1;
+        $system->save();
+
+        System::where('payment_gateway_id', '!=', $gateway_id)->update([
+            'is_active' => 0
+        ]);
+
 
         return response()->json([
             'status'  => 'success',
