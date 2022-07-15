@@ -42,6 +42,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'account_id',
+        'role_id',
         'first_name',
         'last_name',
         'phone',
@@ -71,6 +72,16 @@ class User extends Authenticatable
     public function account()
     {
         return $this->belongsTo(\App\Models\Account::class);
+    }
+
+    /**
+     * The role associated with the user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function role()
+    {
+        return $this->belongsTo(\App\Models\Role::class);
     }
 
     /**

@@ -67,6 +67,15 @@ class CreateUsersTable extends Migration
         });
 
 
+        // Create the `role` table
+        Schema::create('roles', function ($table) {
+            $table->increments('id')->unsigned();
+            $table->string('name', 100);
+            $table->integer('status');
+            $table->nullableTimestamps();
+        });
+
+
         /*
          * Accounts table
          */
@@ -122,6 +131,7 @@ class CreateUsersTable extends Migration
 
             $t->increments('id');
             $t->unsignedInteger('account_id')->index();
+            $t->unsignedInteger('role_id')->index();
             $t->nullableTimestamps();
             $t->softDeletes();
 
@@ -137,6 +147,7 @@ class CreateUsersTable extends Migration
             $t->string('remember_token', 100)->nullable();
 
             $t->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
+            $t->foreign('role_id')->references('id')->on('roles');
         });
 
         Schema::create('organisers', function ($table) {

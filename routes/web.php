@@ -33,6 +33,7 @@ use App\Http\Controllers\OrganiserCustomizeController;
 use App\Http\Controllers\OrganiserDashboardController;
 use App\Http\Controllers\OrganiserEventsController;
 use App\Http\Controllers\OrganiserViewController;
+use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\RemindersController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserLoginController;
@@ -233,9 +234,12 @@ Route::group(
                 [ManageAccountController::class, 'postEditAccount']
             )->name('postEditAccount');
 
+//            Route::post('/edit_payment',
+//                [ManageAccountController::class, 'postEditAccountPayment']
+//            )->name('postEditAccountPayment');
             Route::post('/edit_payment',
-                [ManageAccountController::class, 'postEditAccountPayment']
-            )->name('postEditAccountPayment');
+                [ManageAccountController::class, 'postEditSystemPayment']
+            )->name('postEditSystemPayment');
 
             Route::post('invite_user',
                 [ManageAccountController::class, 'postInviteUser']
@@ -251,6 +255,10 @@ Route::group(
          * Organiser routes
          */
         Route::group(['prefix' => 'organiser'], function () {
+
+            Route::get('{organiser_id}/showOrganizers',
+                [OrganizationController::class, 'showOrganizers']
+            )->name('showOrganizers');
 
             Route::get('{organiser_id}/dashboard',
                 [OrganiserDashboardController::class, 'showDashboard']

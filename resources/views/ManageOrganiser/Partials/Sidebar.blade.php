@@ -16,6 +16,15 @@
                 </a>
             </li>
 
+            @if(Gate::allows('view-organizations'))
+                <li class="{{ Request::is('*organizations*') ? 'active' : '' }}">
+                    <a href="{{route('showOrganizers', array('organiser_id' => $organiser->id))}}">
+                        <span class="figure"><i class="ico-calendar"></i></span>
+                        <span class="text">@lang("Organiser.organization")</span>
+                    </a>
+                </li>
+            @endif
+
             <li class="{{ Request::is('*customize*') ? 'active' : '' }}">
                 <a href="{{route('showOrganiserCustomize', array('organiser_id' => $organiser->id))}}">
                     <span class="figure"><i class="ico-cog"></i></span>

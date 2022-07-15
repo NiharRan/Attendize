@@ -17,6 +17,7 @@ use App\Models\OrderItem;
 use App\Models\PaymentGateway;
 use App\Models\QuestionAnswer;
 use App\Models\ReservedTickets;
+use App\Models\System;
 use App\Models\Ticket;
 use App\Services\Order as OrderService;
 use Services\PaymentGateway\Factory as PaymentGatewayFactory;
@@ -185,16 +186,17 @@ class EventCheckoutController extends Controller
             ]);
         }
 
-        $activeAccountPaymentGateway = $event->account->getGateway($event->account->payment_gateway_id);
+//        $activeAccountPaymentGateway = $event->account->getGateway($event->account->payment_gateway_id);
+        $activeSystemPaymentGateway = System::first();
         //if no payment gateway configured and no offline pay, don't go to the next step and show user error
-        if (empty($activeAccountPaymentGateway) && !$event->enable_offline_payments) {
+        if (empty($activeSystemPaymentGateway) && !$event->enable_offline_payments) {
             return response()->json([
                 'status'  => 'error',
                 'message' => 'No payment gateway configured',
             ]);
         }
 
-        $paymentGateway = $activeAccountPaymentGateway ? $activeAccountPaymentGateway->payment_gateway : false;
+        $paymentGateway = $activeSystemPaymentGateway ? $activeSystemPaymentGateway->payment_gateway : false;
 
         /*
          * The 'ticket_order_{event_id}' session stores everything we need to complete the transaction.
@@ -215,7 +217,7 @@ class EventCheckoutController extends Controller
             'order_requires_payment'  => PaymentUtils::requiresPayment($order_total),
             'account_id'              => $event->account->id,
             'affiliate_referral'      => Cookie::get('affiliate_' . $event_id),
-            'account_payment_gateway' => $activeAccountPaymentGateway,
+            'account_payment_gateway' => $activeSystemPaymentGateway,
             'payment_gateway'         => $paymentGateway
         ]);
 
@@ -354,6 +356,7 @@ class EventCheckoutController extends Controller
         $payment_gateway = $order_session['payment_gateway'];
         $order_total = $order_session['order_total'];
         $account_payment_gateway = $order_session['account_payment_gateway'];
+        $account_payment_gateway->config = unserialize($account_payment_gateway->config);
 
         $orderService = new OrderService($order_session['order_total'], $order_session['total_booking_fee'], $event);
         $orderService->calculateFinalCosts();

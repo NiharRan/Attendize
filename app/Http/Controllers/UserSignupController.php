@@ -75,6 +75,7 @@ class UserSignupController extends Controller
         $user_data = $request->only(['email', 'first_name', 'last_name']);
         $user_data['password'] = Hash::make($request->get('password'));
         $user_data['account_id'] = $account->id;
+        $user_data['role_id'] = 2;
         $user_data['is_parent'] = 1;
         $user_data['is_registered'] = 1;
         $user = User::create($user_data);

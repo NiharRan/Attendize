@@ -32,6 +32,16 @@ class CreateGatewaysTable extends Migration
             $table->foreign('payment_gateway_id')->references('id')->on('payment_gateways')->onDelete('cascade');
             $table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
         });
+
+        Schema::create('system', function (Blueprint $table) {
+            $table->increments('id');
+            $table->unsignedInteger('payment_gateway_id');
+            $table->text('config');
+            $table->softDeletes();
+            $table->nullableTimestamps();
+
+            $table->foreign('payment_gateway_id')->references('id')->on('payment_gateways')->onDelete('cascade');
+        });
     }
 
     /**
@@ -42,6 +52,7 @@ class CreateGatewaysTable extends Migration
     public function down()
     {
         Schema::drop('account_payment_gateways');
+        Schema::drop('system');
         Schema::drop('payment_gateways');
     }
 }

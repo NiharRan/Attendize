@@ -7,6 +7,7 @@ use App\Models\Account;
 use App\Models\AccountPaymentGateway;
 use App\Models\Currency;
 use App\Models\PaymentGateway;
+use App\Models\System;
 use App\Models\Timezone;
 use App\Models\User;
 use Exception;
@@ -159,6 +160,61 @@ class ManageAccountController extends MyBaseController
         ]);
     }
 
+
+    /**
+     * Save system payment information
+     *
+     * @param  Request  $request
+     * @return mixed
+     */
+    public function postEditSystemPayment(Request $request)
+    {
+        if (!\Gate::allows('change-payment-gateway')) {
+            abort(404);
+        }
+        $gateway_id = $request->get('payment_gateway');
+
+        $payment_gateway = PaymentGateway::where('id', '=', $gateway_id)->first();
+
+        $config = [];
+
+        switch ($payment_gateway->name) {
+            case Stripe::GATEWAY_NAME :
+                $config = $request->get('stripe');
+                break;
+            case StripeSCA::GATEWAY_NAME :
+                $config = $request->get('stripe_sca');
+                break;
+            case Dummy::GATEWAY_NAME :
+                break;
+
+        }
+
+        PaymentGateway::query()->update(['default' => 0]);
+
+        $payment_gateway->default = 1;
+        $payment_gateway->save();
+
+        $system = System::first();
+
+        if (!$system) {
+            $system = System::create([
+                'config' => serialize($config),
+                'payment_gateway_id' => $gateway_id
+            ]);
+        } else {
+            $system->config = serialize($config);
+            $system->payment_gateway_id = $gateway_id;
+            $system->save();
+        }
+
+        return response()->json([
+            'status'  => 'success',
+            'id'      => $system->id,
+            'message' => trans('Controllers.payment_information_successfully_updated'),
+        ]);
+    }
+
     /**
      * Invite a user to the application
      *
@@ -192,6 +248,7 @@ class ManageAccountController extends MyBaseController
         $user->email = $request->input('email');
         $user->password = Hash::make($temp_password);
         $user->account_id = Auth::user()->account_id;
+        $user->role_id = 2; // Not admin user
 
         $user->save();
 

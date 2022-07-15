@@ -13,6 +13,14 @@ class DatabaseSeeder extends Seeder
     {
         Eloquent::unguard();
 
+        $roles = ['Admin', 'User'];
+        foreach ($roles as $role) {
+            \App\Models\Role::query()->create([
+                'name' => $role,
+                'status' => 1
+            ]);
+        }
+
         $this->call('CountriesSeeder');
         $this->call('CurrencySeeder');
         $this->call('OrderStatusSeeder');

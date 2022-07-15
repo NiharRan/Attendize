@@ -1,3 +1,4 @@
+@if(Gate::allows('change-payment-gateway'))
 <script>
     $(function () {
 
@@ -13,7 +14,7 @@
 </script>
 
 
-{!! Form::model($account, array('url' => route('postEditAccountPayment'), 'class' => 'ajax ')) !!}
+{!! Form::model($account, array('url' => route('postEditSystemPayment'), 'class' => 'ajax ')) !!}
 <div class="form-group">
     {!! Form::label('payment_gateway_id', trans("ManageAccount.default_payment_gateway"), array('class'=>'control-label
     ')) !!}<br/>
@@ -49,3 +50,4 @@
 
 
 {!! Form::close() !!}
+@endif
