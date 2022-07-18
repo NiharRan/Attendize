@@ -153,9 +153,11 @@ class MyBaseModel extends \Illuminate\Database\Eloquent\Model
         if ($accountId !== false) {
             $table = $this->getTable();
 
-            $query->where(function ($query) use ($accountId, $table) {
-                $query->whereRaw(\DB::raw('('.$table.'.account_id = '.$accountId.')'));
-            });
+            if (Auth::user()->role_id == 2) {
+                $query->where(function ($query) use ($accountId, $table) {
+                    $query->whereRaw(\DB::raw('('.$table.'.account_id = '.$accountId.')'));
+                });
+            }
         }
 
         return $query;

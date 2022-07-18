@@ -42,6 +42,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'account_id',
+        'organiser_id',
         'role_id',
         'first_name',
         'last_name',
@@ -72,6 +73,16 @@ class User extends Authenticatable
     public function account()
     {
         return $this->belongsTo(\App\Models\Account::class);
+    }
+
+    /**
+     * The organizer associated with the user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function organizer()
+    {
+        return $this->belongsTo(\App\Models\Organiser::class);
     }
 
     /**

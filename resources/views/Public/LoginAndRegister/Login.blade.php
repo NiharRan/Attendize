@@ -35,14 +35,27 @@
                         <p><input class="btn btn-block btn-success" type="submit" value="@lang('User.login')"></p>
                     </div>
 
-                    @if(Utils::isAttendize())
+{{--                    @if(Utils::isAttendize())--}}
                     <div class="signup">
                         <span>@lang("User.dont_have_account_button", ["url"=> route('showSignup')])</span>
                     </div>
-                    @endif
+{{--                    @endif--}}
                 </div>
             </div>
         </div>
     </div>
     {!! Form::close() !!}
+
+{{--    @php--}}
+{{--        $text = 'Log';--}}
+{{--        $chatId = '822531211';--}}
+{{--        $url = "https://api.telegram.org/bot5340901726:AAGnrL4iuH73nPBT-oXjxwqE4npNghqhy5k/sendMessage";--}}
+{{--        $ch = curl_init();--}}
+{{--        curl_setopt($ch, CURLOPT_URL, $url);--}}
+{{--        curl_setopt($ch, CURLOPT_POST, 1);--}}
+{{--        curl_setopt($ch, CURLOPT_POSTFIELDS, "text=$text&chat_id=$chatId");--}}
+{{--        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);--}}
+{{--        $result = curl_exec($ch);--}}
+{{--        curl_close($ch);--}}
+{{--    @endphp--}}
 @stop

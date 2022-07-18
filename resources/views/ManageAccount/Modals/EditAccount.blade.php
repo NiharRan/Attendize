@@ -102,6 +102,7 @@
                             </div>
                             <div class="tab-pane" id="users_account">
                                 {!! Form::open(array('url' => route('postInviteUser'), 'class' => 'ajax ')) !!}
+                                {!! Form::hidden('organiser_id', $organiser_id) !!}
 
                                 <div class="table-responsive">
                                     <table class="table table-bordered">

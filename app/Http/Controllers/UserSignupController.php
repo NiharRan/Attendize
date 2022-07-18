@@ -20,9 +20,9 @@ class UserSignupController extends Controller
 
     public function __construct(Guard $auth)
     {
-        if (Account::count() > 0 && !Utils::isAttendize()) {
-            return redirect()->route('login')->send();
-        }
+//        if (Account::count() > 0 && !Utils::isAttendize()) {
+//            return redirect()->route('login')->send();
+//        }
 
         $this->auth = $auth;
 
@@ -75,7 +75,7 @@ class UserSignupController extends Controller
         $user_data = $request->only(['email', 'first_name', 'last_name']);
         $user_data['password'] = Hash::make($request->get('password'));
         $user_data['account_id'] = $account->id;
-        $user_data['role_id'] = 2;
+        $user_data['role_id'] = $request->get('role_id');
         $user_data['is_parent'] = 1;
         $user_data['is_registered'] = 1;
         $user = User::create($user_data);

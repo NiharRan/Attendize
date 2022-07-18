@@ -20,7 +20,7 @@
 
     <!--Meta-->
     @include('Shared.Partials.GlobalMeta')
-   <!--/Meta-->
+    <!--/Meta-->
 
     <!--JS-->
     {!! Html::script(config('attendize.cdn_url_static_assets').'/vendor/jquery/dist/jquery.min.js') !!}
@@ -71,24 +71,33 @@
                             </a>
                         </li>
                     @endif
-                    @foreach($organisers as $org)
-                        <li>
-                            <a href="{{route('showOrganiserDashboard', ['organiser_id' => $org->id])}}">
-                                <i class="ico ico-building"></i> &nbsp;
-                                {{$org->name}}
-                            </a>
+                    @if(Gate::allows('view-organizations'))
+                        @foreach($organisers as $org)
+                            <li>
+                                <a href="{{route('showOrganiserDashboard', ['organiser_id' => $org->id])}}">
+                                    <i class="ico ico-building"></i> &nbsp;
+                                    {{$org->name}}
+                                </a>
 
-                        </li>
-                    @endforeach
+                            </li>
+                        @endforeach
+                    @endif
                     <li class="divider"></li>
-
                     <li>
                         <a data-href="{{route('showEditUser')}}" data-modal-id="EditUser"
                            class="loadModal editUserModal" href="javascript:void(0);"><span class="icon ico-user"></span>@lang("Top.my_profile")</a>
                     </li>
                     <li class="divider"></li>
-                    <li><a data-href="{{route('showEditAccount')}}" data-modal-id="EditAccount" class="loadModal"
-                           href="javascript:void(0);"><span class="icon ico-cog"></span>@lang("Top.account_settings")</a></li>
+                    <li>
+                        @php
+                            $organiser_id = request()->get('organiser_id');
+                            if (!$organiser_id) {
+                                $organiser_id = Request::segment(2);
+                            }
+                        @endphp
+                        <a data-href="{{route('showEditAccount', ['organiser_id' => $organiser_id])}}" data-modal-id="EditAccount" class="loadModal"
+                           href="javascript:void(0);"><span class="icon ico-cog"></span>@lang("Top.account_settings")</a>
+                    </li>
 
 
                     <li class="divider"></li>
@@ -110,13 +119,13 @@
             <h1 class="title">@yield('page_title')</h1>
         </div>
         @if(array_key_exists('page_header', View::getSections()))
-        <!--  header -->
-        <div class="page-header page-header-block row">
-            <div class="row">
-                @yield('page_header')
+            <!--  header -->
+            <div class="page-header page-header-block row">
+                <div class="row">
+                    @yield('page_header')
+                </div>
             </div>
-        </div>
-        <!--/  header -->
+            <!--/  header -->
         @endif
 
         <!--Content-->
@@ -144,7 +153,7 @@
     });
 
     @if(!Auth::user()->first_name)
-      setTimeout(function () {
+    setTimeout(function () {
         $('.editUserModal').click();
     }, 1000);
     @endif

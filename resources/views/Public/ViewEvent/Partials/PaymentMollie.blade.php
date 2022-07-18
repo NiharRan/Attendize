@@ -1,4 +1,4 @@
-<form class="online_payment ajax" action="<?php echo route('postCreateOrder', ['event_id' => $event->id]); ?>" method="post">
+<form class="online_payment ajax" action="{{ route('postCreateOrder', ['event_id' => $event->id]) }}" method="post">
     <div class="online_payment">
         @lang("Public_ViewEvent.mollie_redirect")
 

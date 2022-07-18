@@ -124,32 +124,6 @@ class CreateUsersTable extends Migration
             $t->foreign('currency_id')->references('id')->on('currencies');
         });
 
-        /*
-         * Users Table
-         */
-        Schema::create('users', function ($t) {
-
-            $t->increments('id');
-            $t->unsignedInteger('account_id')->index();
-            $t->unsignedInteger('role_id')->index();
-            $t->nullableTimestamps();
-            $t->softDeletes();
-
-            $t->string('first_name')->nullable();
-            $t->string('last_name')->nullable();
-            $t->string('phone')->nullable();
-            $t->string('email');
-            $t->string('password');
-            $t->string('confirmation_code');
-            $t->boolean('is_registered')->default(false);
-            $t->boolean('is_confirmed')->default(false);
-            $t->boolean('is_parent')->default(false);
-            $t->string('remember_token', 100)->nullable();
-
-            $t->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
-            $t->foreign('role_id')->references('id')->on('roles');
-        });
-
         Schema::create('organisers', function ($table) {
 
             $table->increments('id')->index();
@@ -170,6 +144,34 @@ class CreateUsersTable extends Migration
             $table->boolean('is_email_confirmed')->default(0);
 
             $table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
+        });
+
+        /*
+         * Users Table
+         */
+        Schema::create('users', function ($t) {
+
+            $t->increments('id');
+            $t->unsignedInteger('account_id')->index();
+            $t->unsignedInteger('organiser_id')->nullable()->index();
+            $t->unsignedInteger('role_id')->index();
+            $t->nullableTimestamps();
+            $t->softDeletes();
+
+            $t->string('first_name')->nullable();
+            $t->string('last_name')->nullable();
+            $t->string('phone')->nullable();
+            $t->string('email');
+            $t->string('password');
+            $t->string('confirmation_code');
+            $t->boolean('is_registered')->default(false);
+            $t->boolean('is_confirmed')->default(false);
+            $t->boolean('is_parent')->default(false);
+            $t->string('remember_token', 100)->nullable();
+
+            $t->foreign('organiser_id')->references('id')->on('organisers');
+            $t->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
+            $t->foreign('role_id')->references('id')->on('roles');
         });
 
 

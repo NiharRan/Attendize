@@ -77,6 +77,11 @@ class UserLoginController extends Controller
                 ->with(['message' => trans('Controllers.login_password_incorrect'), 'failed' => true])
                 ->withInput();
         }
-        return redirect()->intended(route('showSelectOrganiser'));
+        $user = Auth::user();
+        if ($user->role_id == 1 || $user->organiser_id == 0) {
+            return redirect()->intended(route('showSelectOrganiser'));
+        }
+
+        return redirect()->intended(route('showOrganiserDashboard', ['organiser_id'=>$user->organiser_id] ));
     }
 }

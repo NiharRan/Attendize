@@ -37,8 +37,10 @@ class ManageAccountController extends MyBaseController
      */
     public function showEditAccount(Request $request)
     {
+        $organiser_id = $request->get('organiser_id');
         $data = [
             'account'                    => Account::find(Auth::user()->account_id),
+            'organiser_id'               => $organiser_id,
             'system'                     => System::where('is_active', 1)->first(),
             'timezones'                  => Timezone::pluck('location', 'id'),
             'currencies'                 => Currency::pluck('title', 'id'),
@@ -254,6 +256,7 @@ class ManageAccountController extends MyBaseController
         $user->email = $request->input('email');
         $user->password = Hash::make($temp_password);
         $user->account_id = Auth::user()->account_id;
+        $user->organiser_id = $request->input('organiser_id');
         $user->role_id = 2; // Not admin user
 
         $user->save();

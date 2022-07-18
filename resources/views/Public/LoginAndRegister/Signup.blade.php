@@ -8,6 +8,7 @@
     <div class="row">
         <div class="col-md-7 col-md-offset-2">
             {!! Form::open(['url' => route("showSignup"), 'class' => 'panel', 'id' => 'signup-form']) !!}
+
             <div class="panel-body">
                 <div class="logo">
                    {!! Html::image('assets/images/logo-dark.png') !!}
@@ -15,9 +16,12 @@
                 <h2>@lang("User.sign_up")</h2>
 
                 @if(Request::input('first_run'))
+                    {!! Form::hidden('role_id', 1) !!}
                     <div class="alert alert-info">
                         @lang("User.sign_up_first_run")
                     </div>
+                @else
+                    {!! Form::hidden('role_id', 2) !!}
                 @endif
 
                 <div class="row">
