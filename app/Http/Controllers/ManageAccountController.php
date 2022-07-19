@@ -133,6 +133,9 @@ class ManageAccountController extends MyBaseController
             case StripeSCA::GATEWAY_NAME :
                 $config = $request->get('stripe_sca');
                 break;
+            case Mollie::GATEWAY_NAME:
+                $config = $request->get('mollie');
+                break;
             case Dummy::GATEWAY_NAME :
                 break;
 
@@ -189,7 +192,7 @@ class ManageAccountController extends MyBaseController
             case StripeSCA::GATEWAY_NAME :
                 $config = $request->get('stripe_sca');
                 break;
-            case Mollie::GATEWAY_NAME :
+            case Mollie::GATEWAY_NAME:
                 $config = $request->get('mollie');
                 break;
             case Dummy::GATEWAY_NAME :

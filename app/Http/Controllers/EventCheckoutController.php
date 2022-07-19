@@ -356,7 +356,7 @@ class EventCheckoutController extends Controller
         $payment_gateway = $order_session['payment_gateway'];
         $order_total = $order_session['order_total'];
         $account_payment_gateway = $order_session['account_payment_gateway'];
-        $account_payment_gateway->config = unserialize($account_payment_gateway->config);
+        $account_payment_gateway->config = is_array($account_payment_gateway->config) ? $account_payment_gateway->config : unserialize($account_payment_gateway->config);
 
         $orderService = new OrderService($order_session['order_total'], $order_session['total_booking_fee'], $event);
         $orderService->calculateFinalCosts();
